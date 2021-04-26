@@ -12,6 +12,7 @@ async function loadTeams(firebase) {
     snapshot.forEach(function (item) {
       teamSet.add(item.val()["leaderboard_name"]);
     });
+    teamSet.add("RealNumberOne");
   });
 }
 
@@ -37,6 +38,9 @@ async function pullLeaderboard(graphName, firebase) {
         teamSet.add(name);
       });
     });
+    const manualScores = await (await fetch("./scores.json")).json();
+    entries.push(["RealNumberOne", manualScores[graphName]]);
+    teamSet.add("RealNumberOne");
     return entries.sort((elem1, elem2) => elem2[1] - elem1[1]);
 }
 
@@ -54,6 +58,14 @@ async function pullFullLeaderboard(firebase) {
         teamSet.add(name);
       });
     });
+    const manualScores = await (await fetch("./scores.json")).json();
+    Object.keys(manualScores).forEach((inputName) => {
+      if (!leaderboards.hasOwnProperty(inputName)) {
+       leaderboards[inputName] = [];
+      }
+      leaderboards[inputName].push(["RealNumberOne", manualScores[inputName]]);
+    });
+    teamSet.add("RealNumberOne");
     return leaderboards;
 }
 
