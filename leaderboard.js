@@ -168,10 +168,18 @@ function createLeaderboard(leaderboardEntries, header, title) {
 }
 
 function createTeamView(teamEntries, teamName) {
+  let lines = "";
   for (let i = 0; i < teamEntries.length; i++) {
     const entry = teamEntries[i];
+    if (entry[1] > 1) {
+      let splitEntry = entry[0].split("-");
+      let type = splitEntry[0];
+      let team = splitEntry[1];
+      lines += `python runner.py mark_nonoptimal --input-type=${type} --team-number=${team}\n`;
+    }
     entry[0] = `<span class="leaderboard-link"><a onclick="moveToLeaderboard('${entry[0]}')">${entry[0]}</a></span>`;
   }
+  console.log(lines);
   document.getElementById('table-title').innerHTML = `Team <code>${teamName}</code>`;
   document.getElementById('table').appendChild(
     formatTable(teamEntries, ["Input Name", "Rank"], false)
